@@ -62,7 +62,7 @@
     NSString *operation = sender.currentTitle;
     double result = [self.brain performOperation:operation];
     self.display.text = [NSString stringWithFormat:@"%g", result];
-    [self logMessageToBrain:operation];
+    [self logMessageToBrain:[operation stringByAppendingString:@"="]];
 }
 
 - (IBAction)decimalPressed {
