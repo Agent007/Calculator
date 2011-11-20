@@ -83,7 +83,13 @@
 }
 
 - (IBAction)backspacePressed {
-    
+    if (self.userIsInMiddleOfEnteringNumber) {
+        self.display.text = [self.display.text substringToIndex:([self.display.text length] - 1)];
+        if ([self.display.text length] == 0) {
+            self.display.text = @"0";
+            self.userIsInMiddleOfEnteringNumber = NO;
+        }
+    }
 }
 
 @end
