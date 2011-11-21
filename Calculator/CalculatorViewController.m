@@ -55,14 +55,35 @@
     [self logMessageToBrain:numberString];
 }
 
-- (IBAction)operationPressed:(UIButton *)sender {
-    if (self.userIsInMiddleOfEnteringNumber) {
-        [self enterPressed];
-    }
-    NSString *operation = sender.currentTitle;
-    double result = [self.brain performOperation:operation];
+- (void)performOperationAndDisplayResult:(NSString *)op
+{
+    double result = [self.brain performOperation:op];
     self.display.text = [NSString stringWithFormat:@"%g", result];
-    [self logMessageToBrain:[operation stringByAppendingString:@"="]];
+    [self logMessageToBrain:[op stringByAppendingString:@"="]];
+
+}
+
+- (NSString *)negateNumberString:(NSString *)number
+{
+    if ([number hasPrefix:@"-"]) {
+        number = [number substringFromIndex:1];
+    } else {
+        number = [@"-" stringByAppendingString:number];
+    }
+    return number;
+}
+
+- (IBAction)operationPressed:(UIButton *)sender {
+    NSString *operation = sender.currentTitle;
+    if (self.userIsInMiddleOfEnteringNumber) {
+        if (![@"+/-" isEqualToString:operation]) {
+            [self enterPressed];
+        } else {
+            self.display.text = [self negateNumberString:self.display.text];
+            return;
+        }
+    }
+    [self performOperationAndDisplayResult:operation];
 }
 
 - (IBAction)decimalPressed {
