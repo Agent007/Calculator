@@ -95,11 +95,11 @@
         self.display.text = DOT;
     }
     self.userIsInMiddleOfEnteringNumber = YES;
-    [self pushStackDisplay:DOT];
 }
 
 - (IBAction)clearPressed {
-    self.stackDisplay.text = self.display.text = @"";
+    self.stackDisplay.text = @"";
+    self.display.text = @"0";
     [self.brain clear];
 }
 
