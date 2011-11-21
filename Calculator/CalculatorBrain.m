@@ -29,6 +29,11 @@
     return [self.programStack copy];
 }
 
++ (NSSet *)operators
+{
+    return [NSSet setWithObjects:@"+", @"*", @"-", @"/", @"sin", @"cos", @"sqrt", @"π", @"+/-", nil];
+}
+
 + (NSString *)descriptionOfProgram:(id)program
 {
     return @"Implement this in Homework #2";
@@ -49,30 +54,32 @@
     if ([topOfStack isKindOfClass:[NSNumber class]]) {
         result = [topOfStack doubleValue];
     } else if ([topOfStack isKindOfClass:[NSString class]]) {
-        NSString *operation = topOfStack;
-        if ([operation isEqualToString:@"+"]) {
-            result = [self popOperandOffProgramStack:stack] +
-            [self popOperandOffProgramStack:stack];
-        } else if ([@"*" isEqualToString:operation]) {
-            result = [self popOperandOffProgramStack:stack] *
-            [self popOperandOffProgramStack:stack];
-        } else if ([operation isEqualToString:@"-"]) {
-            double subtrahend = [self popOperandOffProgramStack:stack];
-            result = [self popOperandOffProgramStack:stack] - subtrahend;
-        } else if ([operation isEqualToString:@"/"]) {
-            double divisor = [self popOperandOffProgramStack:stack];
-            if (divisor) result = [self popOperandOffProgramStack:stack] / divisor; // else return "infinity"
-        } else if ([@"sin" isEqualToString:operation]) {
-            result = sin([self popOperandOffProgramStack:stack]);
-        } else if ([@"cos" isEqualToString:operation]) {
-            result = cos([self popOperandOffProgramStack:stack]);
-        } else if ([@"sqrt" isEqualToString:operation]) {
-            result = sqrt([self popOperandOffProgramStack:stack]);
-        } else if ([@"π" isEqualToString:operation]) {
-            result = M_PI;
-        } else if ([@"+/-" isEqualToString:operation]) {
-            result = -1 * [self popOperandOffProgramStack:stack];
-        }
+        if ([[[self class] operators] member:topOfStack]) {
+            NSString *operation = topOfStack;
+            if ([operation isEqualToString:@"+"]) {
+                result = [self popOperandOffProgramStack:stack] +
+                [self popOperandOffProgramStack:stack];
+            } else if ([@"*" isEqualToString:operation]) {
+                result = [self popOperandOffProgramStack:stack] *
+                [self popOperandOffProgramStack:stack];
+            } else if ([operation isEqualToString:@"-"]) {
+                double subtrahend = [self popOperandOffProgramStack:stack];
+                result = [self popOperandOffProgramStack:stack] - subtrahend;
+            } else if ([operation isEqualToString:@"/"]) {
+                double divisor = [self popOperandOffProgramStack:stack];
+                if (divisor) result = [self popOperandOffProgramStack:stack] / divisor; // else return "infinity"
+            } else if ([@"sin" isEqualToString:operation]) {
+                result = sin([self popOperandOffProgramStack:stack]);
+            } else if ([@"cos" isEqualToString:operation]) {
+                result = cos([self popOperandOffProgramStack:stack]);
+            } else if ([@"sqrt" isEqualToString:operation]) {
+                result = sqrt([self popOperandOffProgramStack:stack]);
+            } else if ([@"π" isEqualToString:operation]) {
+                result = M_PI;
+            } else if ([@"+/-" isEqualToString:operation]) {
+                result = -1 * [self popOperandOffProgramStack:stack];
+            }
+        } // else it may be a variable
     }
     
     return result;
@@ -89,6 +96,16 @@
     [self.programStack removeAllObjects];
 }
 
+- (void)undo
+{
+    [self.programStack removeLastObject];
+}
+
+- (void)pushVariable:(NSString *)variable
+{
+    [self.programStack addObject:variable];
+}
+
 + (double)runProgram:(id)program
 {
     NSMutableArray *stack;
@@ -96,6 +113,16 @@
         stack = [program mutableCopy];
     }
     return [self popOperandOffProgramStack:stack];
+}
+
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
+{
+    return 0;
+}
+
++ (NSSet *)variablesUsedInProgram:(id)program
+{
+    return nil;
 }
 
 @end

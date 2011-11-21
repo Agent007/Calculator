@@ -40,7 +40,7 @@
 
 - (IBAction)digitPressed:(UIButton *)sender {
     NSString *digit = [sender currentTitle];
-    if (self.userIsInMiddleOfEnteringNumber) {
+    if (self.userIsInMiddleOfEnteringNumber && ![@"0" isEqualToString:self.display.text]) { // no need to enter integers with leading zeroes
         self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
         self.display.text = digit;
@@ -50,7 +50,12 @@
 
 - (IBAction)enterPressed {
     NSString *numberString = self.display.text;
-    [self.brain pushOperand:[numberString doubleValue]];
+    double value = [numberString doubleValue];
+    if (!value && ![@"0" isEqualToString:numberString]) {
+        [self.brain pushVariable:numberString];
+    } else {
+        [self.brain pushOperand:value];
+    }
     self.userIsInMiddleOfEnteringNumber = NO;
     [self logMessageToBrain:numberString];
 }
@@ -99,7 +104,7 @@
 
 - (IBAction)clearPressed {
     self.stackDisplay.text = @"";
-    self.display.text = @"0";
+    self.display.text = @"0";   
     [self.brain clear];
 }
 
@@ -111,6 +116,22 @@
             self.userIsInMiddleOfEnteringNumber = NO;
         }
     }
+}
+
+- (IBAction)undoPressed {
+    [self backspacePressed];
+    if ([@"0" isEqualToString:self.display.text]) {
+        self.display.text = [[NSNumber numberWithDouble:[CalculatorBrain runProgram:self.brain.program]] stringValue];
+    }
+    if (!self.userIsInMiddleOfEnteringNumber) {
+        [self.brain undo];
+    }
+}
+
+- (IBAction)variablePressed:(UIButton *)sender {
+    NSString *variable = sender.currentTitle;
+    self.display.text = variable;
+    [self enterPressed];
 }
 
 @end
