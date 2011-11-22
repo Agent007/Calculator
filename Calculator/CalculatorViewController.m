@@ -12,14 +12,17 @@
 @interface CalculatorViewController()
 @property (nonatomic) BOOL userIsInMiddleOfEnteringNumber;
 @property (nonatomic, strong) CalculatorBrain *brain;
+@property (nonatomic, strong) NSDictionary *testVariableValues;
 @end
 
 @implementation CalculatorViewController
 
 @synthesize display = _display;
 @synthesize stackDisplay = _stackDisplay;
+@synthesize variablesDisplay = _variablesDisplay;
 @synthesize userIsInMiddleOfEnteringNumber = _userIsInMiddleOfEnteringNumber;
 @synthesize brain = _brain;
+@synthesize testVariableValues = _testVariableValues;
 
 - (CalculatorBrain *)brain
 {
@@ -27,15 +30,9 @@
     return _brain;
 }
 
-- (void)pushStackDisplay:(NSString *)op
+- (void)logMessageToBrain
 {
-    self.stackDisplay.text = [self.stackDisplay.text stringByAppendingString:op];
-}
-
-- (void)logMessageToBrain:(NSString *)msg
-{
-    [self pushStackDisplay:msg];
-    [self pushStackDisplay:@" "];
+    self.stackDisplay.text = [CalculatorBrain descriptionOfProgram:self.brain.program];
 }
 
 - (IBAction)digitPressed:(UIButton *)sender {
@@ -57,14 +54,14 @@
         [self.brain pushOperand:value];
     }
     self.userIsInMiddleOfEnteringNumber = NO;
-    [self logMessageToBrain:numberString];
+    [self logMessageToBrain];
 }
 
 - (void)performOperationAndDisplayResult:(NSString *)op
 {
     double result = [self.brain performOperation:op];
     self.display.text = [NSString stringWithFormat:@"%g", result];
-    [self logMessageToBrain:[op stringByAppendingString:@"="]];
+    [self logMessageToBrain];
 
 }
 
@@ -133,5 +130,33 @@
     self.display.text = variable;
     [self enterPressed];
 }
+
+- (void)updateVariablesDisplay
+{
+    self.variablesDisplay.text = @"";
+    for (id key in [CalculatorBrain variablesUsedInProgram:self.brain.program]) {
+        if ([key isKindOfClass:[NSString class]]) {
+            id value = [self.testVariableValues valueForKey:(NSString *)key];
+            if ([value isKindOfClass:[NSNumber class]]) {
+                self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:[key stringByAppendingString:[@" = " stringByAppendingString:[(NSNumber *)value stringValue]]]];
+                self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:@" "];
+            }
+        }
+    }
+}
+
+- (IBAction)testVariablesValuesPressed:(UIButton *)sender {
+    NSString *testCase = sender.currentTitle;
+    if ([@"Test 1" isEqualToString:testCase]) {
+        self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:-1.1], @"x", [NSNumber numberWithDouble:.1], @"y", [NSNumber numberWithDouble:1], @"nonexistent", nil];
+    } else if ([@"Test 2" isEqualToString:testCase]) {
+        self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:-0.0], @"x", [NSNumber numberWithDouble:-1], @"y", [NSNumber numberWithDouble:2], @"z", nil];
+    } else if ([@"Test 3" isEqualToString:testCase]) {
+        self.testVariableValues = nil;
+    }
+    // update both main and variables displays
+    [self updateVariablesDisplay];
+}
+
 
 @end
