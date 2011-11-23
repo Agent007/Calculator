@@ -29,9 +29,16 @@
     return [self.programStack copy];
 }
 
++ (NSSet *)multiplicationAndDivision
+{
+    return [NSSet setWithObjects:@"*", @"/", nil];
+}
+
 + (NSSet *)twoOperandOperators
 {
-    return [NSSet setWithObjects:@"+", @"*", @"-", @"/", nil];
+    NSMutableSet *mutableSet = [[self multiplicationAndDivision] mutableCopy];
+    [mutableSet unionSet:[NSSet setWithObjects:@"+", @"-", nil]];
+    return mutableSet;
 }
 
 + (NSSet *)oneOperandOperators
@@ -50,6 +57,11 @@
     [ops unionSet:[self oneOperandOperators]];
     [ops unionSet:[self zeroOperandOperators]];
     return ops;
+}
+
++ (BOOL)isMultiplicationOrDivision:(NSString *)op
+{
+    return [[self multiplicationAndDivision] containsObject:op];
 }
 
 + (BOOL)is2OperandOperation:(NSString *)operation
@@ -78,6 +90,11 @@
     return [[self operators] containsObject:operation];
 }
 
++ (BOOL)isEnclosedByParentheses:(NSString *)description
+{
+    return ([@"(" isEqualToString:[description substringToIndex:1]] &&[@")" isEqualToString:[description substringFromIndex:([description length] - 1)]]);
+}
+
 + (NSString *)descriptionOfTopOfStack:(NSMutableArray *)stack
 {
     NSString *description;
@@ -102,9 +119,18 @@
         NSString *op = top;
         if ([self is2OperandOperation:op]) {
             NSString *secondOperand = [self descriptionOfTopOfStack:stack];
-            description = [NSString stringWithFormat:@"(%@ %@ %@)", [self descriptionOfTopOfStack:stack], op, secondOperand];
+            NSString *format = @"(%@ %@ %@)";
+            if ([self isMultiplicationOrDivision:op]) {
+                format = @"%@ %@ %@";
+            }
+            description = [NSString stringWithFormat:format, [self descriptionOfTopOfStack:stack], op, secondOperand];
         } else if ([self is1OperandOperation:op]) {
-            description = [NSString stringWithFormat:@"%@(%@)", op, [self descriptionOfTopOfStack:stack]];
+            NSString *topDescription = [self descriptionOfTopOfStack:stack];
+            NSString *format = @"%@(%@)";
+            if ([self isEnclosedByParentheses:topDescription]) {
+                format = @"%@%@";
+            }
+            description = [NSString stringWithFormat:format, op, topDescription];
         } else { //if ([self is0OperandOperation:op] || [self isVariable:op]) {
             description = op;
         }
@@ -123,7 +149,14 @@
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
     }
-    return [self descriptionOfTopOfStack:stack];
+    NSString *description = [self descriptionOfTopOfStack:stack];
+    if ([self isEnclosedByParentheses:description]) {
+        NSRange range;
+        range.location = 1;
+        range.length = [description length] - 2;
+        description = [description substringWithRange:range];
+    }
+    return description;
 }
 
 - (void)pushOperand:(double)operand;
