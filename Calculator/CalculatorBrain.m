@@ -204,7 +204,7 @@
 
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
 {
-    NSMutableArray *stack;
+    NSMutableArray *stack = program;
     NSSet *variables = [self variablesUsedInProgram:program];
     if (variables) {
         stack = [program mutableCopy];

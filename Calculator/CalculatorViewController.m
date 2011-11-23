@@ -120,22 +120,6 @@
     }
 }
 
-- (IBAction)undoPressed {
-    [self backspacePressed];
-    if ([@"0" isEqualToString:self.display.text]) {
-        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program]];
-    }
-    if (!self.userIsInMiddleOfEnteringNumber) {
-        [self.brain undo];
-    }
-}
-
-- (IBAction)variablePressed:(UIButton *)sender {
-    NSString *variable = sender.currentTitle;
-    self.display.text = variable;
-    [self enterPressed];
-}
-
 - (void)updateVariablesDisplay
 {
     self.variablesDisplay.text = @"";
@@ -146,6 +130,22 @@
             self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:@" "];
         }
     }
+}
+
+- (IBAction)undoPressed {
+    [self backspacePressed];
+    if (!self.userIsInMiddleOfEnteringNumber) {
+        [self.brain undo];
+        [self logMessageToBrain];
+        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+        [self updateVariablesDisplay];
+    }
+}
+
+- (IBAction)variablePressed:(UIButton *)sender {
+    NSString *variable = sender.currentTitle;
+    self.display.text = variable;
+    [self enterPressed];
 }
 
 - (IBAction)testVariablesValuesPressed:(UIButton *)sender {
