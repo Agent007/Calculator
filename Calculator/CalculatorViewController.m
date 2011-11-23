@@ -46,6 +46,7 @@
 }
 
 - (IBAction)enterPressed {
+    // TODO handle the case when pi then enter button is pressed
     NSString *numberString = self.display.text;
     double value = [numberString doubleValue];
     if (!value && ![@"0" isEqualToString:numberString]) {
@@ -57,10 +58,14 @@
     [self logMessageToBrain];
 }
 
+- (void)updateDisplayResult:(double)result
+{
+    self.display.text = [NSString stringWithFormat:@"%g", result];
+}
+
 - (void)performOperationAndDisplayResult:(NSString *)op
 {
-    double result = [self.brain performOperation:op];
-    self.display.text = [NSString stringWithFormat:@"%g", result];
+    [self updateDisplayResult:[self.brain performOperation:op]];
     [self logMessageToBrain];
 
 }
@@ -118,7 +123,7 @@
 - (IBAction)undoPressed {
     [self backspacePressed];
     if ([@"0" isEqualToString:self.display.text]) {
-        self.display.text = [[NSNumber numberWithDouble:[CalculatorBrain runProgram:self.brain.program]] stringValue];
+        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program]];
     }
     if (!self.userIsInMiddleOfEnteringNumber) {
         [self.brain undo];
@@ -134,13 +139,11 @@
 - (void)updateVariablesDisplay
 {
     self.variablesDisplay.text = @"";
-    for (id key in [CalculatorBrain variablesUsedInProgram:self.brain.program]) {
-        if ([key isKindOfClass:[NSString class]]) {
-            id value = [self.testVariableValues valueForKey:(NSString *)key];
-            if ([value isKindOfClass:[NSNumber class]]) {
-                self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:[key stringByAppendingString:[@" = " stringByAppendingString:[(NSNumber *)value stringValue]]]];
-                self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:@" "];
-            }
+    for (NSString *key in [CalculatorBrain variablesUsedInProgram:self.brain.program]) {
+        NSNumber *value = [self.testVariableValues valueForKey:key];
+        if (value) {
+            self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:[key stringByAppendingString:[@" = " stringByAppendingString:[value stringValue]]]];
+            self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:@" "];
         }
     }
 }
@@ -154,9 +157,11 @@
     } else if ([@"Test 3" isEqualToString:testCase]) {
         self.testVariableValues = nil;
     }
-    // update both main and variables displays
-    [self updateVariablesDisplay];
+    // update displays
+    if ([CalculatorBrain variablesUsedInProgram:self.brain.program]) {
+        [self updateVariablesDisplay];
+        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+    }
 }
-
 
 @end

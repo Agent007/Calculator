@@ -52,34 +52,68 @@
     return ops;
 }
 
++ (BOOL)is2OperandOperation:(NSString *)operation
+{
+    return [[self twoOperandOperators] containsObject:operation];
+}
+
++ (BOOL)is1OperandOperation:(NSString *)operation
+{
+    return [[self oneOperandOperators] containsObject:operation];
+}
+
++ (BOOL)is0OperandOperation:(NSString *)operation
+{
+    return [[self zeroOperandOperators] containsObject:operation];
+}
+
++ (BOOL)isVariable:(NSString *)variable
+{
+    NSSet *VARIABLES = [NSSet setWithObjects:@"x", @"y", @"z", nil];
+    return [VARIABLES containsObject:variable];
+}
+
++ (BOOL)isOperation:(NSString *)operation
+{
+    return [[self operators] containsObject:operation];
+}
+
 + (NSString *)descriptionOfTopOfStack:(NSMutableArray *)stack
 {
     NSString *description;
     
     id top = [stack lastObject];
-    if (top) [stack removeLastObject];
+    if (top) {
+        [stack removeLastObject];
+    } else {
+        description = @"0";
+    }
     
+    // TODO insert commas
     if ([top isKindOfClass:[NSNumber class]]) {
         description = [top stringValue];
+        /*
+        if ([stack count] > 0) {
+         description = [description stringByAppendingString:@", "];
+         description = [description stringByAppendingString:[self descriptionOfTopOfStack:stack]];
+        }*/
+
     } else if ([top isKindOfClass:[NSString class]]) {
         NSString *op = top;
         if ([self is2OperandOperation:op]) {
             NSString *secondOperand = [self descriptionOfTopOfStack:stack];
-            description = @"(";
-            description = [description stringByAppendingString:[self descriptionOfTopOfStack:stack]]; 
-            description = [description stringByAppendingString:@" "];
-            description = [description stringByAppendingString:op];
-            description = [description stringByAppendingString:@" "];
-            description = [description stringByAppendingString:secondOperand];
-            description = [description stringByAppendingString:@")"];
+            description = [NSString stringWithFormat:@"(%@ %@ %@)", [self descriptionOfTopOfStack:stack], op, secondOperand];
         } else if ([self is1OperandOperation:op]) {
-            description = [op stringByAppendingString:@"("];
-            description = [description stringByAppendingString:[self descriptionOfTopOfStack:stack]];
-            description = [description stringByAppendingString:@")"];
-        } else if ([self is0OperandOperation:op] || [self isVariable:op]) {
+            description = [NSString stringWithFormat:@"%@(%@)", op, [self descriptionOfTopOfStack:stack]];
+        } else { //if ([self is0OperandOperation:op] || [self isVariable:op]) {
             description = op;
         }
     }
+    /*
+    if ([stack count] > 0) {
+        description = [description stringByAppendingString:@", "];
+        description = [description stringByAppendingString:[self descriptionOfTopOfStack:stack]];
+    }*/
     return description;
 }
 
@@ -170,46 +204,40 @@
 
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
 {
-    // TODO insert variable values
-    return [self runProgram:program];
+    NSMutableArray *stack;
+    NSSet *variables = [self variablesUsedInProgram:program];
+    if (variables) {
+        stack = [program mutableCopy];
+        for (int i = 0; i < [stack count]; i++) {
+            id element = [stack objectAtIndex:i];
+            if ([variables containsObject:element] && [variableValues objectForKey:element]) {
+                [stack replaceObjectAtIndex:i withObject:[variableValues objectForKey:element]];
+            }
+        }
+    }
+    return [self runProgram:stack];
 }
+
 
 + (NSSet *)variablesUsedInProgram:(id)program
 {
     NSSet *variables;
     if ([program isKindOfClass:[NSArray class]]) {
-        
+        NSArray *stack = [program copy];
+        for (id element in stack) {
+            if ([element isKindOfClass:[NSString class]]) {
+                NSString *elementString = element;
+                if (![self isOperation:elementString] && [self isVariable:elementString]) {
+                    if (!variables) {
+                        variables = [NSSet setWithObject:elementString]; 
+                    } else {
+                        variables = [variables setByAddingObject:elementString];
+                    }
+                }
+            }
+        }
     }
     return variables;
-}
-
-+ (BOOL)is2OperandOperation:(NSString *)operation
-{
-    NSSet *OPERATIONS_WITH_2_OPERANDS = [NSSet setWithObjects:@"+", @"-", @"*", @"/", nil];
-    return [OPERATIONS_WITH_2_OPERANDS containsObject:operation];
-}
-
-+ (BOOL)is1OperandOperation:(NSString *)operation
-{
-    NSSet *OPERATIONS_WITH_1_OPERAND = [NSSet setWithObjects:@"sin", @"cos", @"sqrt", @"+/-", nil];
-    return [OPERATIONS_WITH_1_OPERAND containsObject:operation];
-}
-
-+ (BOOL)is0OperandOperation:(NSString *)operation
-{
-    NSSet *OPERATIONS_WITH_0_OPERANDS = [NSSet setWithObjects:@"π", nil];
-    return [OPERATIONS_WITH_0_OPERANDS containsObject:operation];
-}
-
-+ (BOOL)isVariable:(NSString *)variable
-{
-    NSSet *VARIABLES = [NSSet setWithObjects:@"x", @"y", @"z", nil];
-    return [VARIABLES containsObject:variable];
-}
-
-+ (BOOL)isOperation:(NSString *)operation
-{
-    return [self.operators containsObject:operation];
 }
 
 @end
