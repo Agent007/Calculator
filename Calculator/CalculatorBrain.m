@@ -95,6 +95,7 @@
     return ([@"(" isEqualToString:[description substringToIndex:1]] &&[@")" isEqualToString:[description substringFromIndex:([description length] - 1)]]);
 }
 
+// TODO insert commas
 + (NSString *)descriptionOfTopOfStack:(NSMutableArray *)stack
 {
     NSString *description;
@@ -102,44 +103,34 @@
     id top = [stack lastObject];
     if (top) {
         [stack removeLastObject];
-    } else {
-        description = @"0";
-    }
-    
-    // TODO insert commas
-    if ([top isKindOfClass:[NSNumber class]]) {
-        description = [top stringValue];
-        /*
-        if ([stack count] > 0) {
-         description = [description stringByAppendingString:@", "];
-         description = [description stringByAppendingString:[self descriptionOfTopOfStack:stack]];
-        }*/
-
-    } else if ([top isKindOfClass:[NSString class]]) {
-        NSString *op = top;
-        if ([self is2OperandOperation:op]) {
-            NSString *secondOperand = [self descriptionOfTopOfStack:stack];
-            NSString *format = @"(%@ %@ %@)";
-            if ([self isMultiplicationOrDivision:op]) {
-                format = @"%@ %@ %@";
+        if ([top isKindOfClass:[NSNumber class]]) {
+            description = [top stringValue];
+        } else if ([top isKindOfClass:[NSString class]]) {
+            NSString *op = top;
+            if ([self is2OperandOperation:op]) {
+                NSString *secondOperand = [self descriptionOfTopOfStack:stack];
+                NSString *format = @"(%@ %@ %@)";
+                if ([self isMultiplicationOrDivision:op]) {
+                    format = @"%@ %@ %@";
+                }
+                NSString *firstOperand = [self descriptionOfTopOfStack:stack];
+                description = [NSString stringWithFormat:format, firstOperand, op, secondOperand];
+            } else if ([self is1OperandOperation:op]) {
+                NSString *topDescription = [self descriptionOfTopOfStack:stack];
+                NSString *format = @"%@(%@)";
+                if ([self isEnclosedByParentheses:topDescription]) {
+                    format = @"%@%@";
+                }
+                if ([@"+/-" isEqualToString:op]) {
+                    op = @"-";
+                }
+                description = [NSString stringWithFormat:format, op, topDescription];
+            } else { //if ([self is0OperandOperation:op] || [self isVariable:op]) {
+                description = op;
             }
-            description = [NSString stringWithFormat:format, [self descriptionOfTopOfStack:stack], op, secondOperand];
-        } else if ([self is1OperandOperation:op]) {
-            NSString *topDescription = [self descriptionOfTopOfStack:stack];
-            NSString *format = @"%@(%@)";
-            if ([self isEnclosedByParentheses:topDescription]) {
-                format = @"%@%@";
-            }
-            description = [NSString stringWithFormat:format, op, topDescription];
-        } else { //if ([self is0OperandOperation:op] || [self isVariable:op]) {
-            description = op;
         }
     }
-    /*
-    if ([stack count] > 0) {
-        description = [description stringByAppendingString:@", "];
-        description = [description stringByAppendingString:[self descriptionOfTopOfStack:stack]];
-    }*/
+    
     return description;
 }
 
@@ -164,50 +155,107 @@
     [self.programStack addObject:[NSNumber numberWithDouble:operand]];
 }
 
-+ (double)popOperandOffProgramStack:(NSMutableArray *)stack
++ (id)errorMessageOrVariable:(NSString *)op
 {
-    double result = 0;
+    id result;
+    if ([self isVariable:op]) {
+        result = [NSNumber numberWithDouble:0];
+    } else {
+        result = op;
+    }
+    return result;
+}
+
++ (id)resultOf2Operand:(NSString *)op from:(NSMutableArray *)stack
+{
+    id result;
+    id op2 = [self popOperandOffProgramStack:stack];
+    id op1 = [self popOperandOffProgramStack:stack];
+    if (!op1 || !op2) {
+        result = @"Error: missing operand";
+    } else if ([op1 isKindOfClass:[NSNumber class]] && [op2 isKindOfClass:[NSNumber class]]) {
+        if ([@"+" isEqualToString:op]) {
+            result = [NSNumber numberWithDouble:([op1 doubleValue] + [op2 doubleValue])];
+        } else if ([@"*" isEqualToString:op]) {
+            result = [NSNumber numberWithDouble:([op1 doubleValue] * [op2 doubleValue])];
+        } else if ([@"-" isEqualToString:op]) {
+            result = [NSNumber numberWithDouble:([op1 doubleValue] - [op2 doubleValue])];
+        } else if ([@"/" isEqualToString:op]) {
+            double divisorValue = [op2 doubleValue];
+            if (!divisorValue) {
+                result = @"Error: divide by zero";
+            } else {
+                result = [NSNumber numberWithDouble:([op1 doubleValue] / divisorValue)];
+            }
+        }
+    } else if ([op1 isKindOfClass:[NSString class]]) {
+        result = [self errorMessageOrVariable:op1];
+    } else if ([op2 isKindOfClass:[NSString class]]) {
+        result = [self errorMessageOrVariable:op2];
+    }
+    return result;
+}
+
++ (id)resultOf1Operand:(NSString *)op from:(NSMutableArray *)stack
+{
+    id result;
+    id op1 = [self popOperandOffProgramStack:stack];
+    if (!op1) {
+        result = @"Error: missing operand";
+    } else if ([op1 isKindOfClass:[NSNumber class]]) {
+        if ([@"sin" isEqualToString:op]) {
+            result = [NSNumber numberWithDouble:sin([op1 doubleValue])];
+        } else if ([@"cos" isEqualToString:op]) {
+            result = [NSNumber numberWithDouble:cos([op1 doubleValue])];
+        } else if ([@"sqrt" isEqualToString:op]) {
+            double value = [op1 doubleValue];
+            if (value < 0) {
+                result = @"Error: root of negative number";
+            } else {
+                result = [NSNumber numberWithDouble:sqrt(value)];
+            }
+        } else if ([@"+/-" isEqualToString:op]) {
+            result = [NSNumber numberWithDouble:(-1 * [op1 doubleValue])];
+        }
+    } else {
+        result = [self errorMessageOrVariable:op1];
+    }
+    return result;
+}
+
++ (id)popOperandOffProgramStack:(NSMutableArray *)stack
+{
+    //double result = 0;
+    id result;// = [NSNumber numberWithDouble:0];
     
     id topOfStack = [stack lastObject];
     if (topOfStack) [stack removeLastObject];
     
     if ([topOfStack isKindOfClass:[NSNumber class]]) {
-        result = [topOfStack doubleValue];
+        //result = [topOfStack doubleValue];
+        result = topOfStack;
     } else if ([topOfStack isKindOfClass:[NSString class]]) {
         if ([[[self class] operators] member:topOfStack]) {
             NSString *operation = topOfStack;
-            if ([operation isEqualToString:@"+"]) {
-                result = [self popOperandOffProgramStack:stack] +
-                [self popOperandOffProgramStack:stack];
-            } else if ([@"*" isEqualToString:operation]) {
-                result = [self popOperandOffProgramStack:stack] *
-                [self popOperandOffProgramStack:stack];
-            } else if ([operation isEqualToString:@"-"]) {
-                double subtrahend = [self popOperandOffProgramStack:stack];
-                result = [self popOperandOffProgramStack:stack] - subtrahend;
-            } else if ([operation isEqualToString:@"/"]) {
-                double divisor = [self popOperandOffProgramStack:stack];
-                if (divisor) result = [self popOperandOffProgramStack:stack] / divisor; // else return "infinity"
-            } else if ([@"sin" isEqualToString:operation]) {
-                result = sin([self popOperandOffProgramStack:stack]);
-            } else if ([@"cos" isEqualToString:operation]) {
-                result = cos([self popOperandOffProgramStack:stack]);
-            } else if ([@"sqrt" isEqualToString:operation]) {
-                result = sqrt([self popOperandOffProgramStack:stack]);
+            if ([self is2OperandOperation:operation]) {
+                result = [self resultOf2Operand:operation from:stack];
+            } else if ([self is1OperandOperation:operation]) {
+                result = [self resultOf1Operand:operation from:stack];
             } else if ([@"π" isEqualToString:operation]) {
-                result = M_PI;
-            } else if ([@"+/-" isEqualToString:operation]) {
-                result = -1 * [self popOperandOffProgramStack:stack];
+                result = [NSNumber numberWithDouble:M_PI];
             }
-        } // else it may be a variable
+        } else { // else it may be a variable or error message
+            result = topOfStack;
+        }
     }
     
     return result;
 }
 
-- (double)performOperation:(NSString *)operation
+- (id)performOperation:(NSString *)operation
 {
     [self.programStack addObject:operation];
+    NSLog(@"%@", self.program);
     return [[self class] runProgram:self.program];
 }
 
@@ -226,7 +274,7 @@
     [self.programStack addObject:variable];
 }
 
-+ (double)runProgram:(id)program
++ (id)runProgram:(id)program
 {
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
@@ -235,7 +283,7 @@
     return [self popOperandOffProgramStack:stack];
 }
 
-+ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
++ (id)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
 {
     NSMutableArray *stack = program;
     NSSet *variables = [self variablesUsedInProgram:program];

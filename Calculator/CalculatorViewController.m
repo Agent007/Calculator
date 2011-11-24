@@ -46,7 +46,7 @@
 }
 
 - (IBAction)enterPressed {
-    if (!self.userIsInMiddleOfEnteringNumber && [@"π" isEqualToString:[self.brain.program lastObject]]) {
+    if (!self.userIsInMiddleOfEnteringNumber && [@"π" isEqualToString:[self.brain.program lastObject]]) {  // We prefer to display pi symbol in brain log display when user presses enter button immediately after pi button
         [self.brain pushVariable:@"π"];
     } else {
         NSString *numberString = self.display.text;
@@ -61,9 +61,9 @@
     [self logMessageToBrain];
 }
 
-- (void)updateDisplayResult:(double)result
+- (void)updateDisplayResult:(id)result
 {
-    self.display.text = [NSString stringWithFormat:@"%g", result];
+    self.display.text = [NSString stringWithFormat:@"%@", result];
 }
 
 - (void)performOperationAndDisplayResult:(NSString *)op
@@ -94,6 +94,7 @@
         }
     }
     [self performOperationAndDisplayResult:operation];
+    self.userIsInMiddleOfEnteringNumber = NO;
 }
 
 - (IBAction)decimalPressed {
@@ -109,6 +110,7 @@
 
 - (IBAction)clearPressed {
     self.stackDisplay.text = @"";
+    self.variablesDisplay.text = @"";
     self.display.text = @"0";   
     [self.brain clear];
 }
@@ -152,6 +154,7 @@
 }
 
 - (IBAction)testVariablesValuesPressed:(UIButton *)sender {
+    //self.userIsInMiddleOfEnteringNumber = YES;
     NSString *testCase = sender.currentTitle;
     if ([@"Test 1" isEqualToString:testCase]) {
         self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:-1.1], @"x", [NSNumber numberWithDouble:.1], @"y", [NSNumber numberWithDouble:1], @"nonexistent", nil];
