@@ -256,7 +256,6 @@
 - (id)performOperation:(NSString *)operation
 {
     [self.programStack addObject:operation];
-    NSLog(@"%@", self.program);
     return [[self class] runProgram:self.program];
 }
 
