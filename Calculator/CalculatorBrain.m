@@ -10,6 +10,7 @@
 
 @interface CalculatorBrain()
 @property (nonatomic, strong) NSMutableArray *programStack;
++ (id)popOperandOffProgramStack:(NSMutableArray *)stack;
 @end
 
 @implementation CalculatorBrain

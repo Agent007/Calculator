@@ -23,6 +23,4 @@
 + (id)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues;
 + (NSSet *)variablesUsedInProgram:(id)program;
 
-+ (id)popOperandOffProgramStack:(NSMutableArray *)stack;
-
 @end
