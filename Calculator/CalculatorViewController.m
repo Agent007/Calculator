@@ -46,13 +46,16 @@
 }
 
 - (IBAction)enterPressed {
-    // TODO handle the case when pi then enter button is pressed
-    NSString *numberString = self.display.text;
-    double value = [numberString doubleValue];
-    if (!value && ![@"0" isEqualToString:numberString]) {
-        [self.brain pushVariable:numberString];
+    if (!self.userIsInMiddleOfEnteringNumber && [@"π" isEqualToString:[self.brain.program lastObject]]) {
+        [self.brain pushVariable:@"π"];
     } else {
-        [self.brain pushOperand:value];
+        NSString *numberString = self.display.text;
+        double value = [numberString doubleValue];
+        if (!value && ![@"0" isEqualToString:numberString]) {
+            [self.brain pushVariable:numberString];
+        } else {
+            [self.brain pushOperand:value];
+        }
     }
     self.userIsInMiddleOfEnteringNumber = NO;
     [self logMessageToBrain];
