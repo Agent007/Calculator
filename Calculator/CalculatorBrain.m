@@ -167,7 +167,7 @@
     return result;
 }
 
-+ (id)resultOf2Operand:(NSString *)op from:(NSMutableArray *)stack
++ (id)resultOf2OperandOperation:(NSString *)op onStack:(NSMutableArray *)stack
 {
     id result;
     id op2 = [self popOperandOffProgramStack:stack];
@@ -197,7 +197,7 @@
     return result;
 }
 
-+ (id)resultOf1Operand:(NSString *)op from:(NSMutableArray *)stack
++ (id)resultOf1OperandOperation:(NSString *)op onStack:(NSMutableArray *)stack
 {
     id result;
     id op1 = [self popOperandOffProgramStack:stack];
@@ -239,9 +239,9 @@
         if ([[[self class] operators] member:topOfStack]) {
             NSString *operation = topOfStack;
             if ([self is2OperandOperation:operation]) {
-                result = [self resultOf2Operand:operation from:stack];
+                result = [self resultOf2OperandOperation:operation onStack:stack];
             } else if ([self is1OperandOperation:operation]) {
-                result = [self resultOf1Operand:operation from:stack];
+                result = [self resultOf1OperandOperation:operation onStack:stack];
             } else if ([@"π" isEqualToString:operation]) {
                 result = [NSNumber numberWithDouble:M_PI];
             }
