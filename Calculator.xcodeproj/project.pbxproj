@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF148E6B147F2A6500289199 /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = AF148E6A147F2A6500289199 /* GraphView.m */; };
 		AF267B64147853860010D70B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF267B63147853860010D70B /* UIKit.framework */; };
 		AF267B66147853860010D70B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF267B65147853860010D70B /* Foundation.framework */; };
 		AF267B68147853860010D70B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF267B67147853860010D70B /* CoreGraphics.framework */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF148E69147F2A6500289199 /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
+		AF148E6A147F2A6500289199 /* GraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
 		AF267B5F147853860010D70B /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF267B63147853860010D70B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AF267B65147853860010D70B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -84,6 +87,8 @@
 			isa = PBXGroup;
 			children = (
 				AFCADA2C147F27B60071B63B /* AxesDrawer.h */,
+				AF148E69147F2A6500289199 /* GraphView.h */,
+				AF148E6A147F2A6500289199 /* GraphView.m */,
 				AFCADA2D147F27B60071B63B /* AxesDrawer.m */,
 				AF267B8014786D730010D70B /* CalculatorBrain.h */,
 				AF267B8114786D730010D70B /* CalculatorBrain.m */,
@@ -175,6 +180,7 @@
 				AF267B7A147853860010D70B /* CalculatorViewController.m in Sources */,
 				AF267B8214786D730010D70B /* CalculatorBrain.m in Sources */,
 				AFCADA2E147F27B60071B63B /* AxesDrawer.m in Sources */,
+				AF148E6B147F2A6500289199 /* GraphView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
