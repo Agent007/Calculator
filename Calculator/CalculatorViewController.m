@@ -19,7 +19,6 @@
 
 @synthesize display = _display;
 @synthesize stackDisplay = _stackDisplay;
-@synthesize variablesDisplay = _variablesDisplay;
 @synthesize userIsInMiddleOfEnteringNumber = _userIsInMiddleOfEnteringNumber;
 @synthesize brain = _brain;
 @synthesize testVariableValues = _testVariableValues;
@@ -110,7 +109,6 @@
 
 - (IBAction)clearPressed {
     self.stackDisplay.text = @"";
-    self.variablesDisplay.text = @"";
     self.display.text = @"0";   
     [self.brain clear];
 }
@@ -125,25 +123,12 @@
     }
 }
 
-- (void)updateVariablesDisplay
-{
-    self.variablesDisplay.text = @"";
-    for (NSString *key in [CalculatorBrain variablesUsedInProgram:self.brain.program]) {
-        NSNumber *value = [self.testVariableValues valueForKey:key];
-        if (value) {
-            self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:[key stringByAppendingString:[@" = " stringByAppendingString:[value stringValue]]]];
-            self.variablesDisplay.text = [self.variablesDisplay.text stringByAppendingString:@" "];
-        }
-    }
-}
-
 - (IBAction)undoPressed {
     [self backspacePressed];
     if (!self.userIsInMiddleOfEnteringNumber) {
         [self.brain undo];
         [self logMessageToBrain];
         [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
-        [self updateVariablesDisplay];
     }
 }
 
@@ -151,23 +136,6 @@
     NSString *variable = sender.currentTitle;
     self.display.text = variable;
     [self enterPressed];
-}
-
-- (IBAction)testVariablesValuesPressed:(UIButton *)sender {
-    //self.userIsInMiddleOfEnteringNumber = YES;
-    NSString *testCase = sender.currentTitle;
-    if ([@"Test 1" isEqualToString:testCase]) {
-        self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:-1.1], @"x", [NSNumber numberWithDouble:.1], @"y", [NSNumber numberWithDouble:1], @"nonexistent", nil];
-    } else if ([@"Test 2" isEqualToString:testCase]) {
-        self.testVariableValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:-0.0], @"x", [NSNumber numberWithDouble:-1], @"y", [NSNumber numberWithDouble:2], @"z", nil];
-    } else if ([@"Test 3" isEqualToString:testCase]) {
-        self.testVariableValues = nil;
-    }
-    // update displays
-    if ([CalculatorBrain variablesUsedInProgram:self.brain.program]) {
-        [self updateVariablesDisplay];
-        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
-    }
 }
 
 @end
