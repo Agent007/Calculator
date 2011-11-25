@@ -29,9 +29,17 @@
 - (CGPoint)origin
 {
     // TODO get user preference origin
-    _origin.x = self.bounds.origin.x + self.bounds.size.width/2;
-    _origin.y = self.bounds.origin.y + self.bounds.size.height/2;
+    if (!(_origin.x && _origin.y)) {
+        _origin.x = self.bounds.origin.x + self.bounds.size.width/2;
+        _origin.y = self.bounds.origin.y + self.bounds.size.height/2;
+    }
     return _origin;
+}
+
+- (void)setOrigin:(CGPoint)origin
+{
+    _origin = origin;
+    [self setNeedsDisplay];
 }
 
 - (CGFloat)scale
@@ -62,6 +70,14 @@
     [AxesDrawer drawAxesInRect:self.bounds originAtPoint:self.origin scale:self.scale];
 }
 
+- (void)pan:(UIPanGestureRecognizer *)gesture
+{
+    if ((gesture.state == UIGestureRecognizerStateChanged) || (gesture.state == UIGestureRecognizerStateEnded)) {
+        CGPoint translation = [gesture translationInView:self];
+        self.origin = CGPointMake(self.origin.x + translation.x, self.origin.y + translation.y);
+    }
+}
+
 - (void)pinch:(UIPinchGestureRecognizer *)gesture
 {
     if ((gesture.state == UIGestureRecognizerStateChanged) || (gesture.state == UIGestureRecognizerStateEnded)) {
@@ -70,9 +86,12 @@
     }
 }
 
-- (void)pan:(UIPanGestureRecognizer *)gesture
+- (void)tripleTap:(UITapGestureRecognizer *)gesture
 {
-    
+    if ((gesture.state == UIGestureRecognizerStateChanged) || (gesture.state == UIGestureRecognizerStateEnded)) {
+        CGPoint newOrigin = [gesture locationInView:self];
+        self.origin = CGPointMake(newOrigin.x, newOrigin.y);
+    }
 }
 
 @end
