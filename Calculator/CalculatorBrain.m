@@ -226,14 +226,12 @@
 
 + (id)popOperandOffProgramStack:(NSMutableArray *)stack
 {
-    //double result = 0;
-    id result;// = [NSNumber numberWithDouble:0];
+    id result;
     
     id topOfStack = [stack lastObject];
     if (topOfStack) [stack removeLastObject];
     
     if ([topOfStack isKindOfClass:[NSNumber class]]) {
-        //result = [topOfStack doubleValue];
         result = topOfStack;
     } else if ([topOfStack isKindOfClass:[NSString class]]) {
         if ([[[self class] operators] member:topOfStack]) {
@@ -281,44 +279,6 @@
         stack = [program mutableCopy];
     }
     return [self popOperandOffProgramStack:stack];
-}
-
-+ (id)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
-{
-    NSMutableArray *stack = program;
-    NSSet *variables = [self variablesUsedInProgram:program];
-    if (variables) {
-        stack = [program mutableCopy];
-        for (int i = 0; i < [stack count]; i++) {
-            id element = [stack objectAtIndex:i];
-            if ([variables containsObject:element] && [variableValues objectForKey:element]) {
-                [stack replaceObjectAtIndex:i withObject:[variableValues objectForKey:element]];
-            }
-        }
-    }
-    return [self runProgram:stack];
-}
-
-
-+ (NSSet *)variablesUsedInProgram:(id)program
-{
-    NSSet *variables;
-    if ([program isKindOfClass:[NSArray class]]) {
-        NSArray *stack = [program copy];
-        for (id element in stack) {
-            if ([element isKindOfClass:[NSString class]]) {
-                NSString *elementString = element;
-                if (![self isOperation:elementString] && [self isVariable:elementString]) {
-                    if (!variables) {
-                        variables = [NSSet setWithObject:elementString]; 
-                    } else {
-                        variables = [variables setByAddingObject:elementString];
-                    }
-                }
-            }
-        }
-    }
-    return variables;
 }
 
 @end

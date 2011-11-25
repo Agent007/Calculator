@@ -12,7 +12,6 @@
 @interface CalculatorViewController()
 @property (nonatomic) BOOL userIsInMiddleOfEnteringNumber;
 @property (nonatomic, strong) CalculatorBrain *brain;
-@property (nonatomic, strong) NSDictionary *testVariableValues;
 @end
 
 @implementation CalculatorViewController
@@ -21,7 +20,6 @@
 @synthesize stackDisplay = _stackDisplay;
 @synthesize userIsInMiddleOfEnteringNumber = _userIsInMiddleOfEnteringNumber;
 @synthesize brain = _brain;
-@synthesize testVariableValues = _testVariableValues;
 
 - (CalculatorBrain *)brain
 {
@@ -128,7 +126,7 @@
     if (!self.userIsInMiddleOfEnteringNumber) {
         [self.brain undo];
         [self logMessageToBrain];
-        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program usingVariableValues:self.testVariableValues]];
+        [self updateDisplayResult:[CalculatorBrain runProgram:self.brain.program]];
     }
 }
 
