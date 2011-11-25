@@ -16,6 +16,7 @@
 		AF267B77147853860010D70B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF267B75147853860010D70B /* MainStoryboard.storyboard */; };
 		AF267B7A147853860010D70B /* CalculatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF267B79147853860010D70B /* CalculatorViewController.m */; };
 		AF267B8214786D730010D70B /* CalculatorBrain.m in Sources */ = {isa = PBXBuildFile; fileRef = AF267B8114786D730010D70B /* CalculatorBrain.m */; };
+		AFCADA2E147F27B60071B63B /* AxesDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCADA2D147F27B60071B63B /* AxesDrawer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,8 @@
 		AF267B79147853860010D70B /* CalculatorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CalculatorViewController.m; sourceTree = "<group>"; };
 		AF267B8014786D730010D70B /* CalculatorBrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculatorBrain.h; sourceTree = "<group>"; };
 		AF267B8114786D730010D70B /* CalculatorBrain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalculatorBrain.m; sourceTree = "<group>"; };
+		AFCADA2C147F27B60071B63B /* AxesDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AxesDrawer.h; sourceTree = "<group>"; };
+		AFCADA2D147F27B60071B63B /* AxesDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AxesDrawer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +83,8 @@
 		AF267B69147853860010D70B /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				AFCADA2C147F27B60071B63B /* AxesDrawer.h */,
+				AFCADA2D147F27B60071B63B /* AxesDrawer.m */,
 				AF267B8014786D730010D70B /* CalculatorBrain.h */,
 				AF267B8114786D730010D70B /* CalculatorBrain.m */,
 				AF267B72147853860010D70B /* CalculatorAppDelegate.h */,
@@ -169,6 +174,7 @@
 				AF267B74147853860010D70B /* CalculatorAppDelegate.m in Sources */,
 				AF267B7A147853860010D70B /* CalculatorViewController.m in Sources */,
 				AF267B8214786D730010D70B /* CalculatorBrain.m in Sources */,
+				AFCADA2E147F27B60071B63B /* AxesDrawer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +286,7 @@
 				AF267B7F147853860010D70B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

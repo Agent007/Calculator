@@ -427,6 +427,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="Ewq-Ms-JqF" kind="push" identifier="showGraph" id="aLU-WI-yUc"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -439,6 +442,20 @@
                 </viewController>
             </objects>
             <point key="canvasLocation" x="502" y="117"/>
+        </scene>
+        <scene sceneID="SxU-xC-ds3">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JpR-qI-JMU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="Ewq-Ms-JqF" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="g8p-mb-aGv">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ZvW-C8-sUG"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="976" y="117"/>
         </scene>
     </scenes>
     <classes>
