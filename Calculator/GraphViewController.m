@@ -19,6 +19,7 @@
 
 - (float)programForFaceView:(GraphView *)sender
 {
+    self.title = @"x";
     return 0.0;
 }
 

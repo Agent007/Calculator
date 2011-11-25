@@ -17,11 +17,21 @@
 
 #define DEFAULT_SCALE 1.0
 
+- (void)setup
+{
+    self.contentMode = UIViewContentModeRedraw; // TODO figure out why it's still not redrawing upon autorotation
+}
+
+- (void)awakeFromNib
+{
+    [self setup]; // get initialized when we come out of a storyboard
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        [self setup];
     }
     return self;
 }
@@ -32,6 +42,10 @@
     if (!(_origin.x && _origin.y)) {
         _origin.x = self.bounds.origin.x + self.bounds.size.width/2;
         _origin.y = self.bounds.origin.y + self.bounds.size.height/2;
+    } else {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        _origin.x = [defaults floatForKey:@"origin.x"];
+        _origin.y = [defaults floatForKey:@"origin.y"];
     }
     return _origin;
 }
@@ -40,6 +54,12 @@
 {
     _origin = origin;
     [self setNeedsDisplay];
+    
+    // TODO try setting defaults in view close 
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setFloat:origin.x forKey:@"origin.x"];
+    [defaults setFloat:origin.y forKey:@"origin.y"];
+    [defaults synchronize];
 }
 
 - (CGFloat)scale
@@ -47,7 +67,7 @@
     if (!_scale) {
         return DEFAULT_SCALE;
     } else {
-        return _scale;
+        return [[NSUserDefaults standardUserDefaults] floatForKey:@"scale"];
     }
 }
 
@@ -56,18 +76,41 @@
     if (scale != _scale) {
         _scale = scale;
         [self setNeedsDisplay];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setFloat:scale forKey:@"scale"];
+        [defaults synchronize];
     }
 }
 
 - (void)drawRect:(CGRect)rect
 {
-    //CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGPoint origin = self.origin;
+    CGRect bounds = self.bounds;
+    CGFloat scale = self.scale;
     
-    CGFloat size = self.bounds.size.width / 2;
-    if (self.bounds.size.height < self.bounds.size.width) size = self.bounds.size.height / 2;
-    size *= self.scale; // scale is percentage of full view size
+    [AxesDrawer drawAxesInRect:bounds originAtPoint:origin scale:scale];
     
-    [AxesDrawer drawAxesInRect:self.bounds originAtPoint:self.origin scale:self.scale];
+    CGContextBeginPath(context);
+    CGFloat scaleFactor = self.contentScaleFactor;
+    CGFloat scaledOriginX = origin.x * scaleFactor;
+    CGFloat scaledOriginY = origin.y * scaleFactor;
+    CGFloat maxPixelWidth = bounds.size.width * scaleFactor;
+    //CGFloat maxPixelHeight = bounds.size.height * scaleFactor;
+    for (int pixelWidth = 0; pixelWidth < maxPixelWidth; pixelWidth++) {
+        CGFloat x = (pixelWidth - scaledOriginX); //(width - origin.x)*scale; works for sqrt(x)
+        //x = (pixelWidth - maxPixelWidth/2)*scale;
+        CGFloat y = x; // TODO get program // x*x/scale 
+        CGFloat height = (scaledOriginY - y)/scaleFactor;
+        //height = maxPixelHeight/2 - y*scale;
+        if (0 == pixelWidth) {
+            CGContextMoveToPoint(context, 0, height);
+        }
+        CGContextAddLineToPoint(context, pixelWidth/scaleFactor, height);
+    }
+    [[UIColor redColor] setStroke];
+    CGContextDrawPath(context, kCGPathStroke);
 }
 
 - (void)pan:(UIPanGestureRecognizer *)gesture
