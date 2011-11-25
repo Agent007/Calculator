@@ -92,18 +92,19 @@
     
     [AxesDrawer drawAxesInRect:bounds originAtPoint:origin scale:scale];
     
+    // TODO scale correctly when pinching
     CGContextBeginPath(context);
     CGFloat scaleFactor = self.contentScaleFactor;
-    CGFloat scaledOriginX = origin.x * scaleFactor;
-    CGFloat scaledOriginY = origin.y * scaleFactor;
-    CGFloat maxPixelWidth = bounds.size.width * scaleFactor;
+    //CGFloat scaleFactorTimesScale = scaleFactor * scale;
+    //CGFloat scaleFactorDividedByScale = scaleFactor / scale;
+    CGFloat scaledOriginX = origin.x * scaleFactor;//TimesScale;
+    CGFloat scaledOriginY = origin.y * scaleFactor;//TimesScale;
+    CGFloat maxPixelWidth = bounds.size.width * scaleFactor;//TimesScale;
     //CGFloat maxPixelHeight = bounds.size.height * scaleFactor;
     for (int pixelWidth = 0; pixelWidth < maxPixelWidth; pixelWidth++) {
-        CGFloat x = (pixelWidth - scaledOriginX); //(width - origin.x)*scale; works for sqrt(x)
-        //x = (pixelWidth - maxPixelWidth/2)*scale;
+        CGFloat x = (pixelWidth - scaledOriginX);
         CGFloat y = x; // TODO get program // x*x/scale 
-        CGFloat height = (scaledOriginY - y)/scaleFactor;
-        //height = maxPixelHeight/2 - y*scale;
+        CGFloat height = (scaledOriginY - y)/scaleFactor;//DividedByScale;
         if (0 == pixelWidth) {
             CGContextMoveToPoint(context, 0, height);
         }
