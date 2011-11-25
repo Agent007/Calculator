@@ -8,8 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@class GraphView;
+
+@protocol GraphViewDataSource
+- (float)programForFaceView:(GraphView *)sender;
+@end
+
 @interface GraphView : UIView
 
+@property (nonatomic) CGPoint origin;
 @property (nonatomic) CGFloat scale;
+
+@property (nonatomic, weak) IBOutlet id <GraphViewDataSource> dataSource;
+
+- (void)pinch:(UIPinchGestureRecognizer *)gesture;
+- (void)pan:(UIPanGestureRecognizer *)gesture;
+
 
 @end
