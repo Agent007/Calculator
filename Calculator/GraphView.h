@@ -14,7 +14,7 @@
 - (float)programForFaceView:(GraphView *)sender;
 @end
 
-@interface GraphView : UIView
+@interface GraphView : UIView 
 
 @property (nonatomic) CGPoint origin;
 @property (nonatomic) CGFloat scale;

@@ -29,21 +29,11 @@
                     <toolbarItems/>
                     <connections>
                         <outlet property="graphView" destination="4ew-Tn-NIW" id="6nr-Y1-GLW"/>
+                        <outlet property="toolbar" destination="oXI-Rx-tby" id="qnZ-PZ-QcE"/>
                     </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1566" y="51"/>
-        </scene>
-        <scene sceneID="kmz-1k-vF7">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L8M-mR-Kch" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController id="ges-cE-llN" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="hH5-nu-um5">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                </navigationController>
-            </objects>
-            <point key="canvasLocation" x="1566" y="-886"/>
         </scene>
         <scene sceneID="xjE-Ff-vrs">
             <objects>
@@ -51,8 +41,8 @@
                 <splitViewController id="47Y-WU-kRa" sceneMemberID="viewController">
                     <toolbarItems/>
                     <connections>
-                        <segue destination="ges-cE-llN" kind="relationship" relationship="masterViewController" id="DD5-bd-1Xu"/>
                         <segue destination="R7K-8K-c7j" kind="relationship" relationship="detailViewController" id="Dst-Jm-iqk"/>
+                        <segue destination="XZk-si-nFb" kind="relationship" relationship="masterViewController" id="Xuz-AK-EZR"/>
                     </connections>
                 </splitViewController>
             </objects>
@@ -63,8 +53,8 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RVu-FF-C4K" sceneMemberID="firstResponder"/>
                 <viewController id="XZk-si-nFb" customClass="CalculatorViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jGW-ep-SCI">
-                        <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="832"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="16" id="pxR-7Q-qZa">
                                 <rect key="frame" x="20" y="44" width="280" height="36"/>
@@ -478,7 +468,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2018" y="-1241"/>
+            <point key="canvasLocation" x="2008" y="-1141"/>
         </scene>
     </scenes>
     <classes>
@@ -499,6 +489,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GraphViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="graphView" candidateClass="GraphView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
             </relationships>
         </class>
     </classes>

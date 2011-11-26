@@ -65,7 +65,7 @@
 - (CGFloat)scale
 {
     if (!_scale) {
-        return DEFAULT_SCALE;
+        return self.contentScaleFactor;
     } else {
         return [[NSUserDefaults standardUserDefaults] floatForKey:@"scale"];
     }
@@ -103,7 +103,7 @@
     //CGFloat maxPixelHeight = bounds.size.height * scaleFactor;
     for (int pixelWidth = 0; pixelWidth < maxPixelWidth; pixelWidth++) {
         CGFloat x = (pixelWidth - scaledOriginX);
-        CGFloat y = x; // TODO get program // x*x/scale 
+        CGFloat y = x; // TODO get program // x*x/scale ; x = CONSTANT;
         CGFloat height = (scaledOriginY - y)/scaleFactor;//DividedByScale;
         if (0 == pixelWidth) {
             CGContextMoveToPoint(context, 0, height);

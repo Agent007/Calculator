@@ -45,6 +45,7 @@
 		AF7D1A2814802ABA00F9F0B8 /* iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPad.storyboard; sourceTree = "<group>"; };
 		AFCADA2C147F27B60071B63B /* AxesDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AxesDrawer.h; sourceTree = "<group>"; };
 		AFCADA2D147F27B60071B63B /* AxesDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AxesDrawer.m; sourceTree = "<group>"; };
+		AFED377D1480C1EA001DE098 /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,19 +93,20 @@
 			isa = PBXGroup;
 			children = (
 				AFCADA2C147F27B60071B63B /* AxesDrawer.h */,
+				AFCADA2D147F27B60071B63B /* AxesDrawer.m */,
 				AF148E69147F2A6500289199 /* GraphView.h */,
 				AF148E6A147F2A6500289199 /* GraphView.m */,
-				AFCADA2D147F27B60071B63B /* AxesDrawer.m */,
-				AF267B8014786D730010D70B /* CalculatorBrain.h */,
-				AF267B8114786D730010D70B /* CalculatorBrain.m */,
-				AF267B72147853860010D70B /* CalculatorAppDelegate.h */,
-				AF267B73147853860010D70B /* CalculatorAppDelegate.m */,
-				AF7D1A2814802ABA00F9F0B8 /* iPad.storyboard */,
-				AF267B75147853860010D70B /* iPhone.storyboard */,
 				AF7D1A20147F3A6900F9F0B8 /* GraphViewController.h */,
 				AF7D1A21147F3A6900F9F0B8 /* GraphViewController.m */,
+				AF267B72147853860010D70B /* CalculatorAppDelegate.h */,
+				AF267B73147853860010D70B /* CalculatorAppDelegate.m */,
+				AF267B8014786D730010D70B /* CalculatorBrain.h */,
+				AF267B8114786D730010D70B /* CalculatorBrain.m */,
 				AF267B78147853860010D70B /* CalculatorViewController.h */,
 				AF267B79147853860010D70B /* CalculatorViewController.m */,
+				AF7D1A2814802ABA00F9F0B8 /* iPad.storyboard */,
+				AF267B75147853860010D70B /* iPhone.storyboard */,
+				AFED377D1480C1EA001DE098 /* SplitViewBarButtonItemPresenter.h */,
 				AF267B6A147853860010D70B /* Supporting Files */,
 			);
 			path = Calculator;
