@@ -281,4 +281,41 @@
     return [self popOperandOffProgramStack:stack];
 }
 
++ (id)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
+{
+    NSMutableArray *stack = program;
+    NSSet *variables = [self variablesUsedInProgram:program];
+    if (variables) {
+        stack = [program mutableCopy];
+        for (int i = 0; i < [stack count]; i++) {
+            id element = [stack objectAtIndex:i];
+            if ([variables containsObject:element] && [variableValues objectForKey:element]) {
+                [stack replaceObjectAtIndex:i withObject:[variableValues objectForKey:element]];
+            }
+        }
+    }
+    return [self runProgram:stack];
+}
+
++ (NSSet *)variablesUsedInProgram:(id)program
+{
+    NSSet *variables;
+    if ([program isKindOfClass:[NSArray class]]) {
+        NSArray *stack = [program copy];
+        for (id element in stack) {
+            if ([element isKindOfClass:[NSString class]]) {
+                NSString *elementString = element;
+                if (![self isOperation:elementString] && [self isVariable:elementString]) {
+                    if (!variables) {
+                        variables = [NSSet setWithObject:elementString]; 
+                    } else {
+                        variables = [variables setByAddingObject:elementString];
+                    }
+                }
+            }
+        }
+    }
+    return variables;
+}
+
 @end

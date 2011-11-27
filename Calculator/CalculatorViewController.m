@@ -8,6 +8,7 @@
 
 #import "CalculatorViewController.h"
 #import "CalculatorBrain.h"
+#import "GraphViewController.h"
 #import "SplitViewBarButtonItemPresenter.h"
 
 @interface CalculatorViewController()
@@ -28,6 +29,18 @@
     self.splitViewController.delegate = self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.title = @"Calculator";
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"showGraph"]) {
+        [segue.destinationViewController setCalculatorProgram:self.brain.program];
+    }
+}
 - (id <SplitViewBarButtonItemPresenter>)splitViewBarButtonItemPresenter
 {
     id detailVC = [self.splitViewController.viewControllers lastObject];
@@ -178,6 +191,11 @@
     NSString *variable = sender.currentTitle;
     self.display.text = variable;
     [self enterPressed];
+}
+
+- (IBAction)graphPressed {
+    GraphViewController *controller = [[self.splitViewController viewControllers] lastObject];
+    controller.calculatorProgram = self.brain.program;
 }
 
 @end

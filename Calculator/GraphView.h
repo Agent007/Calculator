@@ -11,12 +11,16 @@
 @class GraphView;
 
 @protocol GraphViewDataSource
-- (float)programForFaceView:(GraphView *)sender;
-@property (nonatomic, weak) id calculatorProgram;
+@property (nonatomic, strong) id calculatorProgram;
 @end
 
 @interface GraphView : UIView 
 
+/**
+ *
+ * Coordinates, in this view's coordinate system, of the drawn axes' origin.
+ *
+ */
 @property (nonatomic) CGPoint origin;
 @property (nonatomic) CGFloat scale;
 

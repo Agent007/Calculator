@@ -11,7 +11,7 @@
 #import "CalculatorBrain.h"
 #import "CalculatorProgramsTableViewController.h"
 
-@interface GraphViewController() <GraphViewDataSource, CalculatorProgramsTableViewControllerDelegate>
+@interface GraphViewController() < CalculatorProgramsTableViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet GraphView *graphView;
 @property (nonatomic, weak) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, strong) UIPopoverController *popoverController; // added after lecture to prevent multiple popovers
@@ -48,34 +48,26 @@
     [self handleSplitViewBarButtonItem:self.splitViewBarButtonItem];
 }
 
-- (float)programForFaceView:(GraphView *)sender
-{
-    self.title = @"x";
-    return 0.0;
-}
-
 - (void)setGraphView:(GraphView *)graphView
 {
     _graphView = graphView;
+    _graphView.dataSource = self;
     [self.graphView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pinch:)]];
     [self.graphView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(pan:)]];
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self.graphView action:@selector(tripleTap:)];
     tapRecognizer.numberOfTapsRequired = 3;
     [self.graphView addGestureRecognizer:tapRecognizer];
-    self.graphView.dataSource = self;
+}
+
+- (void)setCalculatorProgram:(id)calculatorProgram
+{
+    _calculatorProgram = calculatorProgram;
+    [self.graphView setNeedsDisplay];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
-}
-
-- (id)calculatorProgram
-{
-    if (!_calculatorProgram) {
-        _calculatorProgram = [NSArray arrayWithObjects:@"x", nil]; // TODO replace mock data w/ real implementation
-    }
-    return _calculatorProgram;
 }
 
 - (IBAction)addToFavorites {
@@ -85,9 +77,12 @@
     if (!favorites) {
         favorites = [NSMutableArray array];
     }
-    [favorites addObject:self.calculatorProgram];
-    [defaults setObject:favorites forKey:FAVORITES_KEY];
-    [defaults synchronize];
+    id calculatorProgram = self.calculatorProgram;
+    if (calculatorProgram) {
+        [favorites addObject:calculatorProgram];
+        [defaults setObject:favorites forKey:FAVORITES_KEY];
+        [defaults synchronize];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -138,6 +133,5 @@
     [defaults synchronize];
     sender.programs = favorites;
 }
-
 
 @end
