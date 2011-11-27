@@ -87,7 +87,7 @@
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGPoint origin = self.origin;
-    CGRect bounds = self.bounds;
+    CGRect bounds = rect;//self.bounds; // neither makes a difference in fixing scaling and rotation
     CGFloat scale = self.scale;
     
     [AxesDrawer drawAxesInRect:bounds originAtPoint:origin scale:scale];

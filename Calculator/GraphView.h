@@ -12,6 +12,7 @@
 
 @protocol GraphViewDataSource
 - (float)programForFaceView:(GraphView *)sender;
+@property (nonatomic, weak) id calculatorProgram;
 @end
 
 @interface GraphView : UIView 

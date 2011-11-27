@@ -20,6 +20,7 @@
 		AF7D1A23147F3A6900F9F0B8 /* GraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7D1A21147F3A6900F9F0B8 /* GraphViewController.m */; };
 		AF7D1A2914802ABA00F9F0B8 /* iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF7D1A2814802ABA00F9F0B8 /* iPad.storyboard */; };
 		AFCADA2E147F27B60071B63B /* AxesDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = AFCADA2D147F27B60071B63B /* AxesDrawer.m */; };
+		AFED37811481B064001DE098 /* CalculatorProgramsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AFED37801481B064001DE098 /* CalculatorProgramsTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,8 @@
 		AFCADA2C147F27B60071B63B /* AxesDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AxesDrawer.h; sourceTree = "<group>"; };
 		AFCADA2D147F27B60071B63B /* AxesDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AxesDrawer.m; sourceTree = "<group>"; };
 		AFED377D1480C1EA001DE098 /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
+		AFED377F1481B064001DE098 /* CalculatorProgramsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculatorProgramsTableViewController.h; sourceTree = "<group>"; };
+		AFED37801481B064001DE098 /* CalculatorProgramsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalculatorProgramsTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +106,8 @@
 				AF267B8014786D730010D70B /* CalculatorBrain.h */,
 				AF267B8114786D730010D70B /* CalculatorBrain.m */,
 				AF267B78147853860010D70B /* CalculatorViewController.h */,
+				AFED377F1481B064001DE098 /* CalculatorProgramsTableViewController.h */,
+				AFED37801481B064001DE098 /* CalculatorProgramsTableViewController.m */,
 				AF267B79147853860010D70B /* CalculatorViewController.m */,
 				AF7D1A2814802ABA00F9F0B8 /* iPad.storyboard */,
 				AF267B75147853860010D70B /* iPhone.storyboard */,
@@ -193,6 +198,7 @@
 				AFCADA2E147F27B60071B63B /* AxesDrawer.m in Sources */,
 				AF148E6B147F2A6500289199 /* GraphView.m in Sources */,
 				AF7D1A23147F3A6900F9F0B8 /* GraphViewController.m in Sources */,
+				AFED37811481B064001DE098 /* CalculatorProgramsTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

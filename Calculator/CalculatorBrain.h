@@ -16,6 +16,10 @@
 - (void)undo;
 - (void)pushVariable:(NSString *)variable;
 
+/**
+ *
+ * This will be a property list.
+ */
 @property (nonatomic, readonly) id program;
 
 + (NSString *)descriptionOfProgram:(id)program;
