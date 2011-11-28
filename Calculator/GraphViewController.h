@@ -11,4 +11,5 @@
 #import "SplitViewBarButtonItemPresenter.h"
 
 @interface GraphViewController : UIViewController <GraphViewDataSource, SplitViewBarButtonItemPresenter>
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @end

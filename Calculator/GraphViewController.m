@@ -24,6 +24,7 @@
 @synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
 @synthesize toolbar = _toolbar;
 @synthesize calculatorProgram = _calculatorProgram;
+@synthesize titleLabel = _titleLabel;
 @synthesize popoverController;// = _popoverController; // already declared as ivar in UIViewController
 
 - (void)handleSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
@@ -62,6 +63,9 @@
 - (void)setCalculatorProgram:(id)calculatorProgram
 {
     _calculatorProgram = calculatorProgram;
+    NSString *programDescription = [CalculatorBrain descriptionOfProgram:calculatorProgram];
+    self.title = programDescription;
+    self.titleLabel.text = programDescription;
     [self.graphView setNeedsDisplay];
 }
 
@@ -132,6 +136,10 @@
     [defaults setObject:favorites forKey:FAVORITES_KEY];
     [defaults synchronize];
     sender.programs = favorites;
+}
+
+- (IBAction)switchDrawingMode:(id)sender {
+    self.graphView.dotMode = ((UISwitch *) sender).on;
 }
 
 @end

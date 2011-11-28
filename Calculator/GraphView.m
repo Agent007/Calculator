@@ -15,11 +15,13 @@
 @synthesize dataSource = _dataSource;
 @synthesize origin = _origin;
 @synthesize scale = _scale;
+@synthesize dotMode = _dotMode;
 
 #define DEFAULT_SCALE 1.0 //self.contentScaleFactor;
 
 - (void)setup
 {
+    // TODO check that origin and scale weren't set to ridiculously large numbers from previous session, perhaps on a different device type (iPad/iPhone) with a different content scale
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _origin.x = [defaults floatForKey:@"origin.x"];
     _origin.y = [defaults floatForKey:@"origin.y"];
@@ -55,7 +57,7 @@
         _origin = origin;
         [self setNeedsDisplay];
         
-        // TODO try setting defaults in view close to improve performance
+        // this doesn't seem to adversely affect performance according to time profiler
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setFloat:origin.x forKey:@"origin.x"];
         [defaults setFloat:origin.y forKey:@"origin.y"];
@@ -77,11 +79,17 @@
         _scale = scale;
         [self setNeedsDisplay];
         
-        // TODO try setting defaults in view close to improve performance
+        // this doesn't seem to adversely affect performance according to time profiler
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setFloat:scale forKey:@"scale"];
         [defaults synchronize];
     }
+}
+
+- (void)setDotMode:(BOOL)dotMode
+{
+    _dotMode = dotMode;
+    [self setNeedsDisplay];
 }
 
 - (id)calculateOutputValueForInputValue:(CGFloat)x
@@ -100,6 +108,7 @@
     
     /* Plot graph */
     CGContextBeginPath(context);
+    BOOL firstPointHasBeenEstablished = NO;
     CGFloat maxPixelWidth = bounds.size.width * self.contentScaleFactor;
     for (int pixelWidth = 0; pixelWidth < maxPixelWidth; pixelWidth++) {
         CGFloat x = (pixelWidth - origin.x)/scale;
@@ -107,14 +116,24 @@
         if ([output isKindOfClass:[NSNumber class]]) {
             CGFloat y = [output floatValue];
             CGFloat height = origin.y - y*scale;
-            if (0 == pixelWidth) {
-                CGContextMoveToPoint(context, 0, height);
+            if (self.dotMode) {
+                CGContextFillRect(context, CGRectMake(pixelWidth, height, 1,1));
+                firstPointHasBeenEstablished = YES;
+            } else if (!firstPointHasBeenEstablished) {
+                CGContextMoveToPoint(context, pixelWidth, height);
+                firstPointHasBeenEstablished = YES;
+            } else {
+                CGContextAddLineToPoint(context, pixelWidth, height);
             }
-            CGContextAddLineToPoint(context, pixelWidth, height);
         }
     }
-    [[UIColor redColor] setStroke];
-    CGContextDrawPath(context, kCGPathStroke);
+    if (self.dotMode) {
+        [[UIColor redColor] setFill];
+        CGContextDrawPath(context, kCGPathFill); // TODO why does this draw dots as black instead of red?
+    } else {
+        [[UIColor redColor] setStroke];
+        CGContextDrawPath(context, kCGPathStroke);
+    }
 }
 
 - (void)pan:(UIPanGestureRecognizer *)gesture

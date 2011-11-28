@@ -24,6 +24,8 @@
 @property (nonatomic) CGPoint origin;
 @property (nonatomic) CGFloat scale;
 
+@property (nonatomic) BOOL dotMode;
+
 @property (nonatomic, weak) IBOutlet id <GraphViewDataSource> dataSource;
 
 - (void)pan:(UIPanGestureRecognizer *)gesture;
